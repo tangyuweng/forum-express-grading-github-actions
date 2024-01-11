@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 const restController = require('../controllers/restaurant-controller')
+const admin = require('./modules/admin')
+
+router.use('/admin', admin) // 導到後台 admin 路徑
 
 router.get('/restaurants', restController.getRestaurants)
 
