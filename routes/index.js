@@ -1,8 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const restController = require('../controllers/restaurant-controller')
+
+router.get('/restaurants', restController.getRestaurants)
+
+// 設定 fallback 路由，其他路由條件都不符合時，最終會通過的路由
+router.use('/', (req, res) => res.redirect('/restaurants'))
 
 module.exports = router
