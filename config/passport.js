@@ -30,7 +30,6 @@ passport.use(new LocalStrategy(
 passport.serializeUser((user, cb) => {
   cb(null, user.id)
 })
-
 passport.deserializeUser(async (id, cb) => {
   try {
     let user = await User.findByPk(id)
