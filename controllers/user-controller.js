@@ -3,11 +3,14 @@ const db = require('../models')
 const { User } = db
 
 const userController = {
-  singUpPage: (req, res) => {
+
+  // 取得註冊頁
+  signUpPage: (req, res) => {
     res.render('signup')
   },
 
-  singUp: async (req, res, next) => {
+  // 使用者註冊處理
+  signUp: async (req, res, next) => {
     try {
       if (req.body.password !== req.body.passwordCheck) {
         throw new Error('Password do not match!')
@@ -30,6 +33,24 @@ const userController = {
     } catch (error) {
       next(error)
     }
+  },
+
+  // 取得登入頁
+  signInPage: (req, res) => {
+    res.render('signin')
+  },
+
+  // 登入處理
+  signIn: (req, res) => {
+    req.flash('success_messages', '登入成功！')
+    res.redirect('/restaurants')
+  },
+
+  // 登出
+  logout: (req, res) => {
+    req.flash('success_messages', '登出成功！')
+    req.logout()
+    res.redirect('/signin')
   }
 }
 
