@@ -7,10 +7,10 @@ const admin = require('./modules/admin')
 
 const restController = require('../controllers/restaurant-controller')
 const userController = require('../controllers/user-controller')
-const { authenticated } = require('../middleware/auth')
+const { authenticated, authenticatedAdmin } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
 
-router.use('/admin', admin) // 導到後台 admin 路徑
+router.use('/admin', authenticatedAdmin, admin) // 管理者身份驗證, 導到後台 admin 路徑
 
 router.get('/signup', userController.signUpPage) // 取得註冊頁
 
