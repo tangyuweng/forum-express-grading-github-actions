@@ -30,7 +30,7 @@ const adminController = {
         openingHours,
         description
       })
-      req.flash('success_messages', 'restaurant was successfully created')
+      req.flash('success_messages', 'restaurant was successfully to created')
       res.redirect('/admin/restaurants')
     } catch (error) {
       next(error)
@@ -43,6 +43,38 @@ const adminController = {
       const restaurant = await Restaurant.findByPk(req.params.id, { raw: true })
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       res.render('admin/restaurant', { restaurant })
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  // 取得指定餐廳更新頁
+  editRestaurant: async (req, res, next) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true })
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      res.render('admin/edit-restaurant', { restaurant })
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  // 更新餐廳
+  putRestaurant: async (req, res, next) => {
+    try {
+      const { name, tel, address, openingHours, description } = req.body
+      if (!name) throw new Error('Restaurant name is required!')
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      await restaurant.update({
+        name,
+        tel,
+        address,
+        openingHours,
+        description
+      })
+      req.flash('success_messages', 'restaurant was successfully to update')
+      res.redirect('/admin/restaurants')
     } catch (error) {
       next(error)
     }
