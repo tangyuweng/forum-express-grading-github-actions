@@ -19,6 +19,10 @@ router.get('/restaurants', adminController.getRestaurants) // 後台取得所有
 
 router.post('/restaurants', upload.single('image'), adminController.postRestaurant) // 新增餐廳
 
+router.patch('/users/:id', adminController.patchUser) // 更改使用者權限
+
+router.get('/users', adminController.getUsers) // 後台取得所有使用者
+
 router.get('/', (req, res) => res.redirect('/admin/restaurants'))
 
 module.exports = router
