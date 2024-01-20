@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const adminController = require('../../controllers/admin-controller')
+const categoryController = require('../../controllers/category-controller')
 
 const upload = require('../../middleware/multer')
 
@@ -22,6 +23,8 @@ router.post('/restaurants', upload.single('image'), adminController.postRestaura
 router.patch('/users/:id', adminController.patchUser) // 更改使用者權限
 
 router.get('/users', adminController.getUsers) // 後台取得所有使用者
+
+router.get('/categories', categoryController.getCategories) // 後台取得所種類
 
 router.get('/', (req, res) => res.redirect('/admin/restaurants'))
 
