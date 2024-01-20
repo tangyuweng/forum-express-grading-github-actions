@@ -17,6 +17,8 @@ router.post('/restaurants', upload.single('image'), adminController.postRestaura
 router.patch('/users/:id', adminController.patchUser) // 更改使用者權限
 router.get('/users', adminController.getUsers) // 後台取得所有使用者
 
+router.get('/categories/:id', categoryController.getCategories) // 取得指定的種類
+router.put('/categories/:id', categoryController.putCategory) // 更新種類
 router.get('/categories', categoryController.getCategories) // 後台取得所種類
 router.post('/categories', categoryController.postCategory) // 新增種類
 
