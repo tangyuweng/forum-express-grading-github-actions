@@ -10,6 +10,18 @@ const categoryController = {
     } catch (error) {
       next(error)
     }
+  },
+
+  // 新增種類
+  postCategory: async (req, res, next) => {
+    try {
+      const { name } = req.body
+      if (!name) throw new Error('Category name is required!')
+      await Category.create({ name })
+      res.redirect('/admin/categories')
+    } catch (error) {
+      next(error)
+    }
   }
 }
 
