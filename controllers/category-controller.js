@@ -39,6 +39,18 @@ const categoryController = {
     } catch (error) {
       next(error)
     }
+  },
+
+  // 刪除種類 * 進階刪除還沒做 *
+  deleteCategory: async (req, res, next) => {
+    try {
+      const category = await Category.findByPk(req.params.id)
+      if (!category) throw new Error("Category doesn't exist!")
+      await category.destroy()
+      res.redirect('/admin/categories')
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

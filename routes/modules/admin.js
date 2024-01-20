@@ -19,6 +19,7 @@ router.get('/users', adminController.getUsers) // 後台取得所有使用者
 
 router.get('/categories/:id', categoryController.getCategories) // 取得指定的種類
 router.put('/categories/:id', categoryController.putCategory) // 更新種類
+router.delete('/categories/:id', categoryController.deleteCategory) // 刪除總類
 router.get('/categories', categoryController.getCategories) // 後台取得所種類
 router.post('/categories', categoryController.postCategory) // 新增種類
 
