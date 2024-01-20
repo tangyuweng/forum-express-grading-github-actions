@@ -1,4 +1,4 @@
-const { Restaurant, User } = require('../models')
+const { Restaurant, User, Category } = require('../models')
 const localFileHandler = require('../helpers/file-helpers')
 
 const adminController = {
@@ -6,7 +6,11 @@ const adminController = {
   // 後台取得所有餐廳
   getRestaurants: async (req, res, next) => {
     try {
-      const restaurants = await Restaurant.findAll({ raw: true })
+      const restaurants = await Restaurant.findAll({
+        raw: true,
+        nest: true,
+        include: [Category]
+      })
       res.render('admin/restaurants', { restaurants })
     } catch (error) {
       next(error)
@@ -45,7 +49,11 @@ const adminController = {
   // 取得指定餐廳
   getRestaurant: async (req, res, next) => {
     try {
-      const restaurant = await Restaurant.findByPk(req.params.id, { raw: true })
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        raw: true,
+        nest: true,
+        include: [Category]
+      })
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       res.render('admin/restaurant', { restaurant })
     } catch (error) {
