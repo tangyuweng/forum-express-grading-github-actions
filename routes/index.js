@@ -7,6 +7,7 @@ const admin = require('./modules/admin')
 
 const restController = require('../controllers/restaurant-controller')
 const userController = require('../controllers/user-controller')
+const commentController = require('../controllers/comment-controller')
 const { authenticated, authenticatedAdmin } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
 
@@ -20,6 +21,8 @@ router.get('/logout', userController.logout) // 登出
 router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard) // 取得指定餐廳 dashboard
 router.get('/restaurants/:id', authenticated, restController.getRestaurant) // 取得指定餐廳
 router.get('/restaurants', authenticated, restController.getRestaurants) // 取得所有餐廳
+
+router.post('/comments', authenticated, commentController.postComment) // 新增留言
 
 router.use('/', (req, res) => res.redirect('/restaurants')) // 設定 fallback 路由，其他路由條件都不符合時，最終會通過的路由
 
