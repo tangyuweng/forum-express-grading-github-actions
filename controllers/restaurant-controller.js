@@ -59,7 +59,7 @@ const restaurantController = {
           [Comment, 'createdAt', 'DESC'] // 留言照新舊排序
         ]
       })
-      console.log(restaurant.toJSON())
+
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       await restaurant.increment('viewCounts')
       res.render('restaurant', { restaurant: restaurant.toJSON() })

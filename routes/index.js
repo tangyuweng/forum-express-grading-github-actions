@@ -22,6 +22,7 @@ router.get('/restaurants/:id/dashboard', authenticated, restController.getDashbo
 router.get('/restaurants/:id', authenticated, restController.getRestaurant) // 取得指定餐廳
 router.get('/restaurants', authenticated, restController.getRestaurants) // 取得所有餐廳
 
+router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment) // 管理者才可刪除留言，需要加入管理者驗證
 router.post('/comments', authenticated, commentController.postComment) // 新增留言
 
 router.use('/', (req, res) => res.redirect('/restaurants')) // 設定 fallback 路由，其他路由條件都不符合時，最終會通過的路由
