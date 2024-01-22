@@ -7,6 +7,8 @@ const commentController = {
       const { text, restaurantId } = req.body
       const userId = req.user.id
 
+      if (!text) throw new Error('Comment is required!')
+
       const [user, restaurant] = await Promise.all([
         User.findByPk(userId),
         Restaurant.findByPk(restaurantId)
@@ -15,7 +17,11 @@ const commentController = {
       if (!user) throw new Error("User didn't exist!")
       if (!restaurant) throw new Error("Restaurants did't exist!")
 
-      await Comment.create({ text, userId, restaurantId })
+      const comment = await Comment.create({ text, userId, restaurantId })
+
+      if (!comment) throw new Error('留言失敗')
+
+      await restaurant.increment('commentCounts')
 
       res.redirect(`/restaurants/${restaurantId}}`)
     } catch (error) {
@@ -26,9 +32,15 @@ const commentController = {
   // 刪除留言
   deleteComment: async (req, res, next) => {
     try {
-      const comment = await Comment.findByPk(req.params.id)
+      const comment = await Comment.findByPk(req.params.id, {
+        include: Restaurant
+      })
       if (!comment) throw new Error("Comment didn't exist!")
+
       await comment.destroy()
+
+      await comment.Restaurant.decrement('commentCounts')
+
       res.redirect(`/restaurants/${comment.restaurantId}`)
     } catch (error) {
       next(error)
