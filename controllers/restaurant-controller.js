@@ -15,7 +15,7 @@ const restaurantController = {
       const offset = getOffset(limit, page)
 
       const [restaurants, categories] = await Promise.all([
-        await Restaurant.findAndCountAll({ // findAndCountAll：會傳傳 {count: 5, rows: [rest], [rest], [rest]}
+        await Restaurant.findAndCountAll({ // findAndCountAll：會傳傳 {count: 3, rows: [rest], [rest], [rest]}
           include: Category,
           where: {
             ...categoryId ? { categoryId } : {}
@@ -48,9 +48,9 @@ const restaurantController = {
   getRestaurant: async (req, res, next) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id, {
-        include: Category,
+        include: Category
         // raw: true,
-        nest: true
+        // nest: true
       })
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       await restaurant.increment('viewCounts')
