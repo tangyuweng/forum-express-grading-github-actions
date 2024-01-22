@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const localFileHandler = require('../helpers/file-helpers')
 const db = require('../models')
 const { User } = db
 
@@ -51,6 +52,61 @@ const userController = {
     req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
+  },
+
+  // 取得使用者 Profile
+  getUser: async (req, res, next) => {
+    try {
+      if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
+
+      const user = await User.findByPk(req.params.id)
+      if (!user) throw new Error("User didn't exist!")
+      res.render('users/profile', { user: user.toJSON() })
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  // 取得編輯 Profile 頁
+  editUser: async (req, res, next) => {
+    try {
+      if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
+
+      const user = await User.findByPk(req.params.id)
+      if (!user) throw new Error("User didn't exist!")
+      res.render('users/edit', { user: user.toJSON() })
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  // 修改 Profile
+  putUser: async (req, res, next) => {
+    try {
+      if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
+
+      const { name } = req.body
+      const { file } = req
+
+      if (!name.trim()) throw new Error('User name is required!')
+
+      const [user, filePath] = await Promise.all([
+        User.findByPk(req.params.id),
+        localFileHandler(file)
+      ])
+
+      if (!user) throw new Error("User didn't exist!")
+
+      await user.update({
+        name,
+        image: filePath || user.image
+      })
+
+      req.flash('success_messages', '使用者資料編輯成功')
+      res.redirect(`/users/${user.id}`)
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

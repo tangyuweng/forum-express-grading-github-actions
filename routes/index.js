@@ -10,6 +10,7 @@ const userController = require('../controllers/user-controller')
 const commentController = require('../controllers/comment-controller')
 const { authenticated, authenticatedAdmin } = require('../middleware/auth')
 const { generalErrorHandler } = require('../middleware/error-handler')
+const upload = require('../middleware/multer')
 
 router.use('/admin', authenticatedAdmin, admin) // 管理者身份驗證, 導到後台 admin 路徑
 router.get('/signup', userController.signUpPage) // 取得註冊頁
@@ -24,6 +25,10 @@ router.get('/restaurants', authenticated, restController.getRestaurants) // 取�
 
 router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment) // 管理者才可刪除留言，需要加入管理者驗證
 router.post('/comments', authenticated, commentController.postComment) // 新增留言
+
+router.get('/users/:id/edit', authenticated, userController.editUser) // 取得編輯 Profile 頁
+router.get('/users/:id', authenticated, userController.getUser) // 取得使用者 Profile
+router.put('/users/:id', authenticated, upload.single('image'), userController.putUser) // 修改 Profile
 
 router.use('/', (req, res) => res.redirect('/restaurants')) // 設定 fallback 路由，其他路由條件都不符合時，最終會通過的路由
 
