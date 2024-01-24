@@ -21,8 +21,6 @@ const commentController = {
 
       if (!comment) throw new Error('留言失敗')
 
-      await restaurant.increment('commentCounts')
-
       res.redirect(`/restaurants/${restaurantId}}`)
     } catch (error) {
       next(error)
@@ -32,14 +30,10 @@ const commentController = {
   // 刪除留言
   deleteComment: async (req, res, next) => {
     try {
-      const comment = await Comment.findByPk(req.params.id, {
-        include: Restaurant
-      })
+      const comment = await Comment.findByPk(req.params.id)
       if (!comment) throw new Error("Comment didn't exist!")
 
       await comment.destroy()
-
-      await comment.Restaurant.decrement('commentCounts')
 
       res.redirect(`/restaurants/${comment.restaurantId}`)
     } catch (error) {

@@ -1,12 +1,36 @@
-<div class="row mb-5">
-  <div class="col-md-4">
-    <img class="img-responsive center-block mb-5" src="{{user.image}}"
-      style="width: 100%; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+  <div class="card mb-5">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img class="img-fluid rounded-start" src="{{user.image}}">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h1>{{user.name}}</h1>
+          <p>{{user.email}}</p>
+          <p><strong>{{user.Comments.length}} 已評論餐廳</strong></p>
+          <a class="btn btn-primary" href="/users/{{user.id}}/edit">Edit</a>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md-8">
-    <h1>{{user.name}}</h1>
-    <p>{{user.email}}</p>
-    <a class="btn btn-primary" href="/users/{{user.id}}/edit">Edit</a>
+
+  <div class="card mb-5">
+    {{#if user.Comments.length}}
+    <h5 class="card-header">{{user.Comments.length}} 已評論餐廳</h5>
+    <div class="card-body">
+      <div class="row row-cols-auto">
+        {{#each user.Comments}}
+          <div class="col">
+            <a href="/restaurants/{{restaurantId}}">
+              <img class="img-thumbnail" src="{{Restaurant.image}}" style="width: 100px;">
+            </a>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+    {{else}}
+    <h5 class="card-header">尚未評論</h5>
+    {{/if}}
   </div>
-</div>
+
 <a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>

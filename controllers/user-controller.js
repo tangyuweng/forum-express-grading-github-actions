@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs')
 const localFileHandler = require('../helpers/file-helpers')
-const db = require('../models')
-const { User } = db
+const { User, Comment, Restaurant } = require('../models')
 
 const userController = {
 
@@ -59,8 +58,21 @@ const userController = {
     try {
       if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
 
-      const user = await User.findByPk(req.params.id)
+      const user = await User.findByPk(req.params.id, {
+        include: [
+          {
+            model: Comment,
+            include: [
+              {
+                model: Restaurant,
+                attributes: ['image']
+              }
+            ]
+          }
+        ]
+      })
       if (!user) throw new Error("User didn't exist!")
+      // console.log(user.toJSON())
       res.render('users/profile', { user: user.toJSON() })
     } catch (error) {
       next(error)
