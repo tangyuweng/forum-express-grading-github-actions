@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const localFileHandler = require('../helpers/file-helpers')
 const { User, Comment, Restaurant } = require('../models')
+const helper = require('../helpers/auth-helpers')
 
 const userController = {
 
@@ -56,7 +57,8 @@ const userController = {
   // 取得使用者 Profile
   getUser: async (req, res, next) => {
     try {
-      if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
+      const currentUser = helper.getUser(req)
+      if (currentUser.id !== Number(req.params.id)) throw new Error("User didn't exist!")
 
       const user = await User.findByPk(req.params.id, {
         include: [
@@ -82,7 +84,8 @@ const userController = {
   // 取得編輯 Profile 頁
   editUser: async (req, res, next) => {
     try {
-      if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
+      const currentUser = helper.getUser(req)
+      if (currentUser.id !== Number(req.params.id)) throw new Error("User didn't exist!")
 
       const user = await User.findByPk(req.params.id)
       if (!user) throw new Error("User didn't exist!")
@@ -95,7 +98,8 @@ const userController = {
   // 修改 Profile
   putUser: async (req, res, next) => {
     try {
-      if (req.user.id !== Number(req.params.id)) throw new Error("User didn't exist!")
+      const currentUser = helper.getUser(req)
+      if (currentUser.id !== Number(req.params.id)) throw new Error("User didn't exist!")
 
       const { name } = req.body
       const { file } = req
