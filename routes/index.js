@@ -27,6 +27,9 @@ router.get('/restaurants', authenticated, restController.getRestaurants) // 取�
 router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment) // 管理者才可刪除留言，需要加入管理者驗證
 router.post('/comments', authenticated, commentController.postComment) // 新增留言
 
+router.post('/favorite/:restaurantId', authenticated, userController.addFavorite) // 加入喜歡餐廳
+router.delete('/favorite/:restaurantId', authenticated, userController.deleteFavorite) // 移除喜歡餐廳
+
 router.get('/users/:id/edit', authenticated, userController.editUser) // 取得編輯 Profile 頁
 router.get('/users/:id', authenticated, userController.getUser) // 取得使用者 Profile
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser) // 修改 Profile
