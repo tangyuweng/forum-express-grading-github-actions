@@ -83,9 +83,34 @@ const restaurantController = {
         }
       })
 
-      console.log(restaurant, commentCount)
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       res.render('dashboard', { restaurant, commentCount })
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  // 取得最新動態
+  getFeeds: async (req, res, next) => {
+    try {
+      const [restaurants, comments] = await Promise.all([
+        Restaurant.findAll({
+          limit: 10,
+          order: [['createdAt', 'DESC']],
+          include: [Category],
+          nest: true,
+          raw: true
+        }),
+        Comment.findAll({
+          limit: 10,
+          order: [['createdAt', 'DESC']],
+          include: [User, Restaurant],
+          nest: true,
+          raw: true
+        })
+      ])
+
+      res.render('feeds', { restaurants, comments })
     } catch (error) {
       next(error)
     }

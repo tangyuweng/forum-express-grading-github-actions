@@ -21,8 +21,8 @@
       <div class="row row-cols-auto">
         {{#each user.Comments}}
           <div class="col">
-            <a href="/restaurants/{{restaurantId}}">
-              <img class="img-thumbnail" src="{{Restaurant.image}}" style="width: 100px;">
+            <a href="/restaurants/{{this.restaurantId}}">
+              <img class="img-thumbnail" src="{{this.Restaurant.image}}" style="width: 100px;">
             </a>
           </div>
         {{/each}}
