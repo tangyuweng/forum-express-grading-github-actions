@@ -30,6 +30,9 @@ router.post('/comments', authenticated, commentController.postComment) // 新增
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite) // 加入喜歡餐廳
 router.delete('/favorite/:restaurantId', authenticated, userController.deleteFavorite) // 移除喜歡餐廳
 
+router.post('/like/:restaurantId', authenticated, userController.addLike)
+router.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
 router.get('/users/:id/edit', authenticated, userController.editUser) // 取得編輯 Profile 頁
 router.get('/users/:id', authenticated, userController.getUser) // 取得使用者 Profile
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser) // 修改 Profile
