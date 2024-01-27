@@ -131,8 +131,8 @@ const userController = {
       const { restaurantId } = req.params
 
       const [restaurant, favorite] = await Promise.all([
-        Restaurant.findByPk(restaurantId),
-        Favorite.findOne({
+        Restaurant.findByPk(restaurantId), // 要收藏的這家餐廳是否存在？
+        Favorite.findOne({ // 確認這個收藏的關聯是否存在？
           where: {
             userId: req.user.id,
             restaurantId
@@ -157,7 +157,7 @@ const userController = {
   // 移除喜歡餐廳
   deleteFavorite: async (req, res, next) => {
     try {
-      const favorite = await Favorite.findOne({
+      const favorite = await Favorite.findOne({ // 確認收藏關聯是否存在
         where: {
           userId: req.user.id,
           restaurantId: req.params.restaurantId

@@ -28,9 +28,12 @@ const restaurantController = {
         Category.findAll({ raw: true })
       ])
 
+      const favoritedRestaurantsId = req.user && req.user.FavoritedRestaurants.map(fr => fr.id)
+
       const data = restaurants.rows.map(r => ({
         ...r,
-        description: r.description.substring(0, 50) // description 會覆蓋掉原本 r 裡面的 description
+        description: r.description.substring(0, 50), // description 會覆蓋掉原本 r 裡面的 description
+        isFavorited: favoritedRestaurantsId.includes(r.id)
       }))
 
       res.render('restaurants', {
@@ -50,19 +53,17 @@ const restaurantController = {
       const restaurant = await Restaurant.findByPk(req.params.id, {
         include: [
           Category,
-          {
-            model: Comment,
-            include: User
-          }
+          { model: Comment, include: User },
+          { model: User, as: 'FavoritedUsers' }
         ],
-        order: [
-          [Comment, 'createdAt', 'DESC'] // 留言照新舊排序
-        ]
+        order: [[Comment, 'createdAt', 'DESC']] // 留言照新舊排序
       })
 
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       await restaurant.increment('viewCounts')
-      res.render('restaurant', { restaurant: restaurant.toJSON() })
+      const isFavorited = restaurant.FavoritedUsers.some(f => f.id === req.user.id)
+
+      res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited })
     } catch (error) {
       next(error)
     }
