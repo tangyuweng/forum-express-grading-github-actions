@@ -39,7 +39,7 @@ passport.deserializeUser(async (id, cb) => {
         { model: User, as: 'Followings' }
       ]
     })
-    console.log(user.toJSON())
+
     cb(null, user.toJSON())
   } catch (error) {
     cb(error)
