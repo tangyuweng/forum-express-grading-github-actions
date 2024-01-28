@@ -155,7 +155,7 @@ const userController = {
   },
 
   // 移除喜歡餐廳
-  deleteFavorite: async (req, res, next) => {
+  removeFavorite: async (req, res, next) => {
     try {
       const favorite = await Favorite.findOne({ // 確認收藏關聯是否存在
         where: {

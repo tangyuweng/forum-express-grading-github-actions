@@ -119,6 +119,28 @@ const restaurantController = {
     } catch (error) {
       next(error)
     }
+  },
+
+  getTopRestaurants: async (req, res, next) => {
+    try {
+      const restaurants = await Restaurant.findAll({
+        include: [{ model: User, as: 'FavoritedUsers' }]
+      })
+
+      const result = restaurants
+        .map(r => ({
+          ...r.toJSON(),
+          description: r.description.substring(0, 50),
+          favoritedCount: r.FavoritedUsers.length,
+          isFavorited: req.user && req.user.FavoritedRestaurants.some(fr => fr.id === r.id)
+        }))
+        .sort((a, b) => b.favoritedCount - a.favoritedCount)
+        .slice(0, 10)
+      // console.log(result)
+      res.render('top-restaurants', { restaurants: result })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

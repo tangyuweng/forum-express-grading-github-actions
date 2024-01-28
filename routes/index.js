@@ -19,6 +19,7 @@ router.get('/signin', userController.signInPage) // 取得登入頁
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn) // 登入處理
 router.get('/logout', userController.logout) // 登出
 
+router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
 router.get('/restaurants/feeds', authenticated, restController.getFeeds) // 取得最新動態
 router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard) // 取得指定餐廳 dashboard
 router.get('/restaurants/:id', authenticated, restController.getRestaurant) // 取得指定餐廳
@@ -28,7 +29,7 @@ router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComme
 router.post('/comments', authenticated, commentController.postComment) // 新增留言
 
 router.post('/favorite/:restaurantId', authenticated, userController.addFavorite) // 加入喜歡餐廳
-router.delete('/favorite/:restaurantId', authenticated, userController.deleteFavorite) // 移除喜歡餐廳
+router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite) // 移除喜歡餐廳
 
 router.post('/like/:restaurantId', authenticated, userController.addLike)
 router.delete('/like/:restaurantId', authenticated, userController.removeLike)
