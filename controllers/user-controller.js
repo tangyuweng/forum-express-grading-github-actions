@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const localFileHandler = require('../helpers/file-helpers')
-const { User, Comment, Restaurant, Favorite, Like } = require('../models')
+const { User, Comment, Restaurant, Favorite, Like, Followship } = require('../models')
 const helper = require('../helpers/auth-helpers')
 
 const userController = {
@@ -226,13 +226,62 @@ const userController = {
         include: [{ model: User, as: 'Followers' }]
       })
 
-      const usersData = users.map(user => ({
-        ...user.toJSON(),
-        followerCount: user.Followers.length, // 計算追蹤者人數
-        isFollowed: req.user.Followings.some(f => f.id === user.id) // 判斷目前登入使用者是否已追蹤該 user 物件
-      }))
-      console.log(usersData)
-      res.render('top-users', { users: usersData })
+      const result = users
+        .map(user => ({
+          ...user.toJSON(),
+          followerCount: user.Followers.length, // 計算追蹤者人數
+          isFollowed: req.user.Followings.some(f => f.id === user.id) // 判斷目前登入使用者是否已追蹤該 user 物件
+        }))
+        .sort((a, b) => b.followerCount - a.followerCount)
+
+      res.render('top-users', { users: result })
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  addFollowing: async (req, res, next) => {
+    try {
+      const { userId } = req.params
+      const [user, followship] = await Promise.all([
+        User.findByPk(userId),
+        Followship.findOne({
+          where: {
+            followerId: req.user.id,
+            followingId: userId
+          }
+        })
+      ])
+
+      if (!user) throw new Error("User didn't exist!")
+      if (followship) throw new Error('You are already followed this user!')
+
+      await Followship.create({
+        followerId: req.user.id,
+        followingId: userId
+      })
+
+      res.redirect('back')
+    } catch (error) {
+      next(error)
+    }
+  },
+
+  removeFollowing: async (req, res, next) => {
+    try {
+      const { userId } = req.params
+      const followship = await Followship.findOne({
+        where: {
+          followerId: req.user.id,
+          followingId: userId
+        }
+      })
+
+      if (!followship) throw new Error("You haven't followed this user!")
+
+      await followship.destroy()
+
+      res.redirect('back')
     } catch (error) {
       next(error)
     }
